@@ -1,0 +1,113 @@
+﻿@model IEnumerable<CheckBoxTest.Models.Items>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table id="hobbittable" class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @*@Html.DisplayFor(modelItem => item.Status)*@
+                @if (item.Status)
+                {
+                    <input id="@item.Id" type="checkbox" value="@item.Id" checked/>
+                }
+                else
+                {
+                    <input id="@item.Id" type="checkbox" value="@item.Id" />
+                }
+                
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+<input type="button" id="toggleButton" value="Save" />
+<input type="checkbox" id="masterCheck" value="Check/Uncheck All" />
+
+
+@section Scripts{
+    @*@Scripts.Render("~/bundles/jqueryunobtrusive")*@
+
+
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+    <script type="text/javascript">
+
+        document.querySelector('#toggleButton').addEventListener('click', toggle);
+        document.querySelector('#masterCheck').addEventListener('click', checkAll);
+
+        function checkAll() {
+            var masterCheck = document.getElementById("masterCheck");
+            var itemIdsAndStatus = document.querySelectorAll('td:nth-child(2)');
+
+            for (var i = 0; i < itemIdsAndStatus.length; i++) {      
+
+                if (masterCheck.checked) {
+                    itemIdsAndStatus[i].children[0].checked = true;
+                }
+                else
+                {
+                    itemIdsAndStatus[i].children[0].checked = false;
+                }
+                
+            }
+
+        }
+
+        function toggle() {
+
+            var itemIdsAndStatus = document.querySelectorAll('td:nth-child(2)');
+            var postData = [];
+
+
+            for (var i = 0; i < itemIdsAndStatus.length; i++) {
+                var jsonData = {};
+                jsonData["id"] = itemIdsAndStatus[i].children[0].id;
+                jsonData["status"] = itemIdsAndStatus[i].children[0].checked
+                postData.push(jsonData);
+
+            }
+            console.log(postData);
+            
+            $.ajax({
+                type: "POST",
+                url: `/Items/RegisterToggle2/`,
+                contentType: "application/json",
+                data: JSON.stringify(postData),
+                success: function (r) {
+                    if (r) {
+                        alert("Success");
+                    } else {
+                        alert("Failure");
+                    }
+                }
+            });
+        }
+    </script>
+
+
+}
+
