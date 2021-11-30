@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace CheckBoxTest.Models
 {
     public class ItemsIndexVM
     {
-        public IEnumerable<Items> AllItems { get; set; }
+        public List<Items> AllItems { get; set; }
+        public string TestWord { get; set; }
     }
 }

@@ -18,6 +18,20 @@ namespace CheckBoxTest.Controllers
             return View(db.Items.ToList());
         }
 
+
+        public ActionResult Index2()
+        {
+            var allItems = db.Items.ToList();
+            var model = new ItemsIndexVM
+            {
+                AllItems = allItems,
+                TestWord = "OH, HALLO!"
+
+            };
+
+            return View(model);
+        }
+
         // GET: Items/Details/5
         public ActionResult Details(int? id)
         {
@@ -165,6 +179,13 @@ namespace CheckBoxTest.Controllers
 
 
             return Content("Status toggled");
+        }
+
+
+        [HttpPost]
+        public ActionResult TakeItems(ItemsIndexVM model)
+        {
+            return View(nameof(Index2));
         }
 
     }
